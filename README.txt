@@ -122,7 +122,7 @@ Next I'll add a handful of modules I open sourced:
 
 	* gaq_hub - centrally manages google analytics
 	* htmlmeta_hub - centrally manages metadata for documents
-	* opengrpah_writer - centrally manages facebook open graph metadata, provides some simple validation and debugging
+	* opengraph_writer - centrally manages facebook open graph metadata, provides some simple validation and debugging
 	* facebook_utils - simplifies authenticated logins with facebook
 	* pyramid_subscribers_cookiexfer - helps manage setcookie on redirects
 	* pyramid_formencode_classic - provides some formhandling routines that I found useful under pyramid
