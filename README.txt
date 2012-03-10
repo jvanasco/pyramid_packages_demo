@@ -36,6 +36,14 @@ the docs/tutorial are released under the Creative Commons Attribution-ShareAlike
 There are extensive calls to log.debug() and inline comments to show how everything fits together.
 
 
+# Instant Gratification
+
+1. Clone this
+2. `cd` into the directory, then `python setup.py develop` ( preferably from a virtualenv
+
+The information below gives an overview on how the app was built, and how all the components are configured and fit together.
+
+
 # Organize the project
 
 I like to organize my workspace up like this:
