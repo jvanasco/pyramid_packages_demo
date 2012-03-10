@@ -11,7 +11,7 @@ The packages i'm illustrating :
 * pyramid_subscribers_cookiexfer - subscribers to automate persisting cookies throughout redirects in pyramid
 * pyramid_formencode_classic - formencode parsing library to emulate (and improve upon) the original pylons validation mechanisms
 * pyramid_subscribers_beaker_https_session - supports an ancillary https only cookie/session
-* insecure_but_secure_enough - cry[tography that is good enough for non-sensitive information , like an autologin
+* insecure_but_secure_enough - cryptography that is good enough for non-sensitive information , like an autologin
 
 This is also a crash-course on setting up a pyramid app with a bunch of Web 2.0 stuff, using the pyramid_handlers dispatch system.
 
@@ -134,6 +134,8 @@ Next I'll add a handful of modules I open sourced:
 	* facebook_utils - simplifies authenticated logins with facebook
 	* pyramid_subscribers_cookiexfer - helps manage setcookie on redirects
 	* pyramid_formencode_classic - provides some formhandling routines that I found useful under pyramid
+	* pyramid_subscribers_beaker_https_session - supports an ancillary https only cookie/session
+	* insecure_but_secure_enough - cryptography that is good enough for non-sensitive information , like an autologin
 
 Finally, we'll install the app into the development path, which will also install all the modules we need... 
 
