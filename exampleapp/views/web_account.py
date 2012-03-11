@@ -221,7 +221,7 @@ class WebAccount(_base.Handler):
         if not url:
             url= '/account/home'
         if self.request._app_meta.is_logged_in:
-            raise HTTPFound(url)
+            return HTTPFound(url)
         if h.COOKIENAME_AUTOLOGIN in self.request.cookies :
             encrypted= self.request.cookies[h.COOKIENAME_AUTOLOGIN].encode('ascii')
             try:
@@ -233,9 +233,11 @@ class WebAccount(_base.Handler):
                         log.debug("AutoLogin success")
                         useraccountInstance= self.__new_user()
                         h.do_login( self.request , useraccount=useraccountInstance , remember_me=False , login_type='autologin' )
-                        raise HTTPFound(url)
+                        return HTTPFound(url)
             except:
                 log.debug("AutoLogin failure")
-                pass
-        raise HTTPFound(url)
+                self.request.response.set_cookie( h.COOKIENAME_AUTOLOGIN, value='1', max_age=0, path='/' )
+                if url.startswith('/account'):
+                    url = '/'
+        return HTTPFound(url)
 
