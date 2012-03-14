@@ -18,6 +18,9 @@ requires = [
     'pyramid_beaker',
     'simplejson',
     
+    # we need this for https awareness
+    'pastedeploy',
+    
     # as a bonus, lets integrate pymongo
     'pymongo',
 

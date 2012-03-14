@@ -409,7 +409,54 @@ This will allow anything with session_https. or beaker_session_https. in your de
 
 the https session cookie will be an attribute of the request, as request.session_https.  
 
-Please note -- on the current version of the package, it will be an empty session on non-https connections. 
+Please note -- on the first version of the package, it will be an empty session on non-https connections, version 0.0.2 and above will return NONE unless we're on an HTTPS session
+
+
+# illustrating an https session via a load-balancer/upstream proxy , with nginx
+
+The simplest way to simulate a production environment is to install nginx onto your local machine ( nginx.net )
+
+Nginx is a super-small , very-lightweight webserver that many people prefer to run as the frontend proxy on their installations.
+
+when you compile nginx, make sure you have the ssl module installed.
+
+## create a key
+i included a self-signed key in the ssl/ directory.
+
+create the key + certificate signing request
+
+	openssl req -new -nodes -keyout ssl.key -out ssl.csr
+
+sign the csr into a cert
+
+	openssl x509 -req -days 365 -in ssl.csr -signkey ssl.key -out ssl.crt
+
+## configure nginx to use the key
+
+i included a stripped-down verison of the config file for nginx  , which references the certs
+
+## configure the app to use PasteDeploy's prefix middleware
+
+prefix-middleware does a lot of things that we don't necessarily need.  it also does one thing we do need - adjust the environment vars to allow for https detection and various other proxy needs.  check out the 3 lines in development.ini used to configure this:
+
+[app:main]
++filter-with = proxy-prefix
+
++[filter:proxy-prefix]
++use = egg:PasteDeploy#prefix
+
+as of version 0.0.2 of my session_https module, the session will either be a session object on https connections, or None on http connections
+
+
+
+
+
+
+
+
+
+
+
 
 
 
