@@ -68,7 +68,7 @@ I also like to organize the file structure a bit differently too.
 
 * i like to preface my handlers with web_ and mobile_ ; and have /web and /mobile toplevel directories.  some people like having the same feature in the same package, but in my usage i tend to have different user experiences across platforms and I find it easier to divide work across team members and manage a merge process
 
-* i like to use partials and template inheritance.  anything that should never be rendered itself ( like a site template or a footer file ) i pre-pend with an @ sign.  The @sign is not RFC valid for a url part, so could never use used as a static file or view name 
+* i like to use partials and template inheritance.  anything that should never be rendered itself ( like a site template or a footer file ) i pre-pend with an @ sign.  The @sign is not RFC valid for a url part, so could never use used as a static file or view name
 
 * i like to keep forms in a separate module.  i find that i re-use them more often when they're nice and consolidated.
 
@@ -84,7 +84,7 @@ very quickly...
 	$ cd ~/work/environments
 	$ virtualenv PyramidExamples_ExampleApp-2.7
 	$ vi ~/go_PyramidExamples_ExampleApp.source
-	
+
 and then edit the file into...
 
     source ~/work/environments/PyramidExamples_ExampleApp-2.7/bin/activate
@@ -98,10 +98,10 @@ before i do that though, i'd want to manually do this:
 
     # activate the environment
     $ source ~/work/environments/PyramidExamples_ExampleApp-2.7/bin/activate
-    
+
     # jump into the folder
     $ cd ~/work/projects/PyramidExamples/apps
-    
+
     # make the scaffold
     $ pcreate -t starter ExampleApp
 
@@ -137,7 +137,7 @@ Next I'll add a handful of modules I open sourced:
 	* pyramid_subscribers_beaker_https_session - supports an ancillary https only cookie/session
 	* insecure_but_secure_enough - cryptography that is good enough for non-sensitive information , like an autologin
 
-Finally, we'll install the app into the development path, which will also install all the modules we need... 
+Finally, we'll install the app into the development path, which will also install all the modules we need...
 
 	$ python setup.py develop
 
@@ -156,7 +156,7 @@ I like to set an "app domain" per environment.  I find this to be really helpful
 i also like to set a cache_max_age in the environment too:
 
 	static.cache_max_age = 10
-	
+
 The default scaffolds hardcode this, but I find that a LONG cache is good on production while nearly no caching is optimal for development ( as you often change javascript within seconds )
 
 
@@ -252,7 +252,7 @@ Production app.  use the id/secret values from it for "production.ini"
 ### Setting your environment.ini variables
 
 The following lines should go in your development.ini
-	
+
 	facebook.app.id= %(facebook_app_id)s
 	facebook.app.secret= %(facebook_app_secret)s
 	facebook.app.scope= email
@@ -260,7 +260,7 @@ The following lines should go in your development.ini
 
 You'll want to specify exactly what your app's id, secret, and scope are.
 
-Right now you can specify them on the commandline 
+Right now you can specify them on the commandline
 
 	pserve --reload development.ini facebook_app_id=123 facebook_app_secret=123456
 
@@ -271,26 +271,26 @@ The app will not start without these arguments (real or fake) being passed in.  
 It's important to note here that whatever you configure Facebook to recognize must be the exact same environment as your app.
 
 For example , if you tell facebook that your app is on 127.0.0.1:5000  , then requests to facebook MUST originate from that ( facebook's javascript library knows ).  Your app might still work on 0.0.0.0:5000 , but that will break Facebook.  Similarly, using a different port will require re-configuring facebook -- so if you decide to start testing https sessions and set up nginx to run on 127.0.0.1 ( implicit port 80), Facebook must be configured to expect that as well.
-	
-	
+
+
 I've provided a stub of Facebook JSSDK integration in /static/js/web.js
 
 There's a detailed explanation on my blog here: http://www.destructuring.net/2011/12/08/facebook-developer-notes-javascript-sdk-and-asynchronous-woes/
 
 A few things you should note about this integration:
 
-0. This integration is just a very simplified tutorial / explanation to get you started.	
+0. This integration is just a very simplified tutorial / explanation to get you started.
 
 1. we initialize our facebook integration by dropping the facebook sdk code in the site-template AND THEN making a call to the fbUtils.initialize() which is defined our file js/web.js
 
 2. the templates/web/account/login.mako file contains this line:
 	fbUtils.ensureInit(fbUtils.login_page_facebook_init);
-	
+
 	fbUtils.ensureInit is a helper function that uses javascript setIntervals to ensure that we're connected to facebook before something runs.  this makes us bug-free in terms of load-order
-	
-	`login_page_facebook_init` checks to see if we're logged in.  if we are, it redirects the user to /account/facebook-authenticate , which will log the user in via the Facebook API. 
-	
-	As long as you are logged-in to facebook and opted-in to your facebook app , this redirect will occur.  You'll have to opt-out of your facebook app a lot during testing. 
+
+	`login_page_facebook_init` checks to see if we're logged in.  if we are, it redirects the user to /account/facebook-authenticate , which will log the user in via the Facebook API.
+
+	As long as you are logged-in to facebook and opted-in to your facebook app , this redirect will occur.  You'll have to opt-out of your facebook app a lot during testing.
 
 3. The signup page has similar features to the login page.
 
@@ -298,11 +298,11 @@ A few things you should note about this integration:
 
 
 
-	
-	
+
+
 # Configure the app's __init__.py
 
-exampleapp/__init__.py is the master bit of 'setup' code for your app.  
+exampleapp/__init__.py is the master bit of 'setup' code for your app.
 
 I'd suggest looking at the setup in detail, but a quick overview is this:
 
@@ -336,11 +336,11 @@ in there, i define a base handler that does a few key things:
 
 1. I attach 'request' to self.request
 2. I call h.htmlmeta_setup(), which is a helper function from htmlmeta_hub imported into the helpers package.  this initializes the core htmlmeta item and attaches it to the request. ( htmlmeta_hub )
-3. I put an _app_meta object on the request.  it's just a stash of random data that I tend to need.  notice how I put login status there - this way i don't continually call a helper function (even if it is simple). I also have a 'facebook_enable' flag - if i only want the facebook SDK loaded on certain pages, my templates will control loading it via that.
+3. I put an app_meta object on the request.  it's just a stash of random data that I tend to need.  notice how I put login status there - this way i don't continually call a helper function (even if it is simple). I also have a 'facebook_enable' flag - if i only want the facebook SDK loaded on certain pages, my templates will control loading it via that.
 4. I initialize an opengraph item for the page , provided by pyramid_opengraph_item , using some site defaults which I will override later ( opengraph_writer )
 5. I make a call to gaq_setup, another function imported into the helpers package  ( gaq_hub )
 6. I attach a lib.helpers.NavSectionObject() to the request.  This is a little object where I stash the current "nav element" within my views.  In the site-template, I can quickly check to see if I'm on the current nav section and print "class='active'".  There are a lot of mechanisms to handle this sort of need, I found this to be very easy and fairly lightweight.
-
+7. I create a request.workspace namespace.  instead of passing variables into a template, i populate this namespace and have them reference it.  also, when i do aggressive caching of precompiled data into the template - i populate the cache into request.data_cache as i fetch new data -- and check to see if i have it there before calling out to memcached or recompiling data.
 
 # Create logical handlers...
 
@@ -355,7 +355,7 @@ I chose to do this only because it was faster to get a system based on this meth
 
 The easiest way to see how I approach formhandling is within /views/web_account.py and the login routine
 
-I provide an executable view on `def login(self)`.  
+I provide an executable view on `def login(self)`.
 
 This function then dispatches the login logic as follows:
 
@@ -375,7 +375,7 @@ If the user wants to be remembered, we do two things:
 • We create a "payload" that is a dict which merely includes the user's id , and encrypt it.
 • We set an autologin cookie with that payload.
 
-NOTE - this should ONLY be done over a secure https channel.  
+NOTE - this should ONLY be done over a secure https channel.
 
 Looking at our lib/handlers.py file, you'll see on our Handler class that if we're not logged in but have an autologin cookie, we redirect to /account/login-automatic
 
@@ -404,10 +404,10 @@ Step 2 - __init__.py has 2 relevant lines
 
 	from pyramid_subscribers_beaker_https_session import initialize_https_session_set_request_property
 	initialize_https_session_set_request_property( config , settings )
-	
+
 This will allow anything with session_https. or beaker_session_https. in your development.ini file to specify the https session cookie information.
 
-the https session cookie will be an attribute of the request, as request.session_https.  
+the https session cookie will be an attribute of the request, as request.session_https.
 
 Please note -- on the first version of the package, it will be an empty session on non-https connections, version 0.0.2 and above will return NONE unless we're on an HTTPS session
 
@@ -464,5 +464,5 @@ as of version 0.0.2 of my session_https module, the session will either be a ses
 # A GROWING TODO
 
 1. Illustrate session & session_https differences , and lock session_https down more
-2. 
+2.
 
